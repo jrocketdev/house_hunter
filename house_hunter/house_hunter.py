@@ -83,7 +83,7 @@ class RedfinListing:
         return True
 
 
-class RedfinSearch:
+class RedfinListingSearch:
 
     @classmethod
     def do_search(cls, region_type, region_id, do_type_switch=True, **kwargs):
@@ -111,6 +111,25 @@ class RedfinSearch:
         region_id = region_str.split('_')[-1]
         region_type = int(region_str.split('_')[0])
         return cls.do_search(region_type=region_type, region_id=region_id, do_type_switch=True)
+
+    @classmethod
+    def do_poly_search(cls, user_poly, **kwargs):
+        url_temp = 'https://www.redfin.com/stingray/api/gis?al=1&v=8&status=9&num_homes=10000&user_poly=' + user_poly
+        if len(kwargs) > 0:
+            url_temp = url_temp + '&' + '&'.join([key + '=' + str(val) for key, val in kwargs.items()])
+            print(url_temp)
+        response = requests.get(url_temp, headers=_REQUEST_HEADER)
+        if not response.ok:
+            warnings.warn('Failed search results - Bad Response')
+            return None
+        response_content = response.content.decode('utf-8')
+        json_str = response_content.replace('{}&&', '')
+        json_data = json.loads(json_str)
+        if json_data['errorMessage'] != 'Success':
+            warnings.warn('Failed search results - Failure Message: {}'.format(json_data['errorMessage']))
+            return None
+
+        return [RedfinListing.from_summary(summary) for summary in json_data['payload']['homes']]
 
 
 class RedfinLocationSearch:
