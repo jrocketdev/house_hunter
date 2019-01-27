@@ -1,5 +1,5 @@
 import sys
-from house_hunter.house_hunter import RedfinListing
+from house_hunter.redfin_hunter import RedfinListing
 
 property_id = '21670371'
 listing_id = '97241798'

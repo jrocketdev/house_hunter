@@ -7,7 +7,7 @@ import pytest
 
 from click.testing import CliRunner
 
-from house_hunter import house_hunter
+from house_hunter import redfin_hunter
 from house_hunter import cli
 
 

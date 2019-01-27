@@ -131,11 +131,34 @@ class RedfinListingSearch:
 
         return [RedfinListing.from_summary(summary) for summary in json_data['payload']['homes']]
 
+    @classmethod
+    def parse_user_poly_from_url(cls, url: str) -> str:
+        """
+        Strip the user_poly parameter from a search URL originated from redfin.com
+
+        :param url: URL string
+        :return: user_poly string from url (or None if not found)
+        """
+        params = url.split('?')[-1]
+        url_split = params.split('&')
+
+        for param in url_split:
+            if param.split('=')[0].lower() == 'user_poly':
+                return param.split('=')[-1]
+        return None
+
 
 class RedfinLocationSearch:
 
     @classmethod
-    def do_search(cls, search_term, is_addr=False):
+    def do_search(cls, search_term: str, is_addr: bool=False) -> list:
+        """
+        Search redfin for matching location names (or addresses)
+
+        :param search_term: Search string
+        :param is_addr: True if specifying an address rather than a location
+        :return: list
+        """
         location_url = _LOCATION_SEARCH_BASE.format(location=search_term)
         response = requests.get(location_url, headers=_REQUEST_HEADER)
         if not response.ok: return None
@@ -144,8 +167,8 @@ class RedfinLocationSearch:
         if json_data['errorMessage'] != 'Success': return None
         result_dict = {data['name']: data['rows'] for data in json_data['payload']['sections']}
         if is_addr:
-            return result_dict.get('Addresses')
-        return result_dict.get('Places')
+            return result_dict.get('Addresses') or []
+        return result_dict.get('Places') or []
 
 
 class HouseHunt:

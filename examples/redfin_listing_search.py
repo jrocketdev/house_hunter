@@ -1,4 +1,4 @@
-from house_hunter.house_hunter import RedfinListingSearch
+from house_hunter.redfin_hunter import RedfinListingSearch
 
 region_str = '2_16904'
 

@@ -103,3 +103,6 @@ ENV/
 
 # PYcharm
 .idea/
+
+# Test code folder
+_test_code/

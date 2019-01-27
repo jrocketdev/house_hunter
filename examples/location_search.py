@@ -1,3 +1,11 @@
-from house_hunter.house_hunter import RedfinLocationSearch
+from house_hunter.redfin_hunter import RedfinLocationSearch
 
-print(RedfinLocationSearch.do_search('San Diego, CA'))
+results = RedfinLocationSearch.do_search('San Diego, CA')
+
+for res in results:
+    print(res)
+
+results = RedfinLocationSearch.do_search('606 Third Ave, San Diego, CA', is_addr=True)
+
+for res in results:
+    print(res)
