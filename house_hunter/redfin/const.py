@@ -10,13 +10,9 @@ REGION_TYPE_DESCRIPTOR = {
     6: 'NEIGHBORHOOD'
 }
 
-_LOCATION_TYPE_SWITCH = {
-    6: 1,
-    2: 6,
-    3: 7,
-    4: 2
-}
 LISTING_SEARCH_BASE = 'https://www.redfin.com/stingray/api/gis?al=1&v=8&status=9&' \
+                      'region_id={region_id}&region_type={region_type}&num_homes=10000'
+LISTING_SEARCH_BASE = 'https://www.redfin.com/stingray/api/gis?al=1&v=8&' \
                       'region_id={region_id}&region_type={region_type}&num_homes=10000'
 REQUEST_HEADER = {
     'User-Agent':

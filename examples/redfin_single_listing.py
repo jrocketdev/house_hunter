@@ -1,8 +1,8 @@
 import sys
 from house_hunter.redfin.listing import RedfinListing
 
-property_id = '21670371'
-listing_id = '97241798'
+property_id = '5832509'
+listing_id = '99577228'
 
 listing = RedfinListing(property_id=property_id, listing_id=listing_id)
 print(listing)
@@ -16,3 +16,8 @@ else:
     sys.exit(-1)
 
 print(listing.comprehensive_dict)
+
+import json
+
+print(json.dumps(listing.comprehensive_dict))
+print(listing.house)

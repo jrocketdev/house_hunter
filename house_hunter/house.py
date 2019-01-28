@@ -3,12 +3,16 @@ from typing import List
 import numpy as np
 
 @dataclass
-class Room:
+class Bedroom:
     width: float = np.nan
     length: float = np.nan
     is_master: bool = False
     has_attached_bathroom: bool = False
     has_vaulted_ceilings: bool = False
+
+    @property
+    def square_footage(self):
+        return self.width*self.length
 
 @dataclass
 class Bathroom:
@@ -21,10 +25,11 @@ class House:
     city: str
     state: str
     zip: int
-    square_footage: int
+
+    square_footage: float = np.nan
     lot_size: float = np.nan
-    rooms: List[Room] = field(default_factory=list)
-    bathrooms: List[Bathroom] = field(default_factory=list)
+    bedrooms: List[Bedroom] = field(default_factory=list)
+    num_bathrooms: float = np.nan
     stories: int = -1
     description: str = ''
 
@@ -37,3 +42,8 @@ class House:
 
     list_price: float = np.nan
     mls_num: int = -1
+    country: str = 'US'
+
+    @property
+    def num_bedrooms(self):
+        return len(self.bedrooms)

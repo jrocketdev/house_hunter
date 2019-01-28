@@ -1,17 +1,27 @@
 import json
 import requests
 import warnings
+from typing import Union
 
-from house_hunter.redfin.const import _LOCATION_TYPE_SWITCH, LISTING_SEARCH_BASE, REQUEST_HEADER
+from house_hunter.redfin.const import LISTING_SEARCH_BASE, REQUEST_HEADER
+from house_hunter.redfin.utils import get_region_type_and_id_from_id_string
 from house_hunter.redfin.listing import RedfinListing
 
 
 class RedfinListingSearch:
 
     @classmethod
-    def do_search(cls, region_type, region_id, do_type_switch=True, **kwargs):
-        if do_type_switch:
-            region_type = _LOCATION_TYPE_SWITCH[region_type]
+    def do_search(cls, region_type, region_id, **kwargs):
+        """
+        Do a Redfin search based on the given region type and id.
+
+        To find region type and id see utils methods.
+
+        :param region_type:
+        :param region_id:
+        :param kwargs:
+        :return:
+        """
         url_temp = LISTING_SEARCH_BASE.format(region_type=region_type, region_id=region_id)
         if len(kwargs) > 0:
             url_temp = url_temp + '&' + '&'.join([key + '=' + str(val) for key, val in kwargs.items()])
@@ -31,9 +41,14 @@ class RedfinListingSearch:
 
     @classmethod
     def do_search_by_id_str(cls, region_str):
-        region_id = region_str.split('_')[-1]
-        region_type = int(region_str.split('_')[0])
-        return cls.do_search(region_type=region_type, region_id=region_id, do_type_switch=True)
+        """
+        Do a Redfin search based on the region id string (e.g. "#_#####")
+
+        :param region_str: String in the form of "#_#####" that can be found by doing a region search in utils.
+        :return:
+        """
+        region_id, region_type = get_region_type_and_id_from_id_string(region_str)
+        return cls.do_search(region_type=region_type, region_id=region_id)
 
     @classmethod
     def do_poly_search(cls, user_poly, **kwargs):
@@ -62,7 +77,7 @@ class RedfinListingSearch:
         return [RedfinListing.from_summary(summary) for summary in json_data['payload']['homes']]
 
     @classmethod
-    def parse_user_poly_from_url(cls, url: str) -> str:
+    def parse_user_poly_from_url(cls, url: str) -> Union[str, None]:
         """
         Strip the user_poly parameter from a search URL originated from redfin.com
 
